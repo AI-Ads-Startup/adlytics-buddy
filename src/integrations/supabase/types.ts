@@ -14,7 +14,311 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ads: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          descriptions: string[]
+          final_url: string
+          headlines: string[]
+          id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          descriptions: string[]
+          final_url: string
+          headlines: string[]
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          descriptions?: string[]
+          final_url?: string
+          headlines?: string[]
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ads_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          budget_amount: number | null
+          created_at: string
+          id: string
+          name: string
+          phone_number: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          website_url: string | null
+        }
+        Insert: {
+          budget_amount?: number | null
+          created_at?: string
+          id?: string
+          name: string
+          phone_number?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+        }
+        Update: {
+          budget_amount?: number | null
+          created_at?: string
+          id?: string
+          name?: string
+          phone_number?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      keywords: {
+        Row: {
+          bid_amount: number | null
+          campaign_id: string
+          competition: string | null
+          created_at: string
+          id: string
+          match_type: string
+          search_volume: number | null
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          bid_amount?: number | null
+          campaign_id: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          match_type?: string
+          search_volume?: number | null
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          bid_amount?: number | null
+          campaign_id?: string
+          competition?: string | null
+          created_at?: string
+          id?: string
+          match_type?: string
+          search_volume?: number | null
+          text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "keywords_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      performance_metrics: {
+        Row: {
+          calls: number | null
+          campaign_id: string
+          clicks: number | null
+          conversions: number | null
+          cost: number | null
+          created_at: string
+          date: string
+          id: string
+          impressions: number | null
+          updated_at: string
+        }
+        Insert: {
+          calls?: number | null
+          campaign_id: string
+          clicks?: number | null
+          conversions?: number | null
+          cost?: number | null
+          created_at?: string
+          date: string
+          id?: string
+          impressions?: number | null
+          updated_at?: string
+        }
+        Update: {
+          calls?: number | null
+          campaign_id?: string
+          clicks?: number | null
+          conversions?: number | null
+          cost?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          impressions?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_metrics_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          business_goals: string[] | null
+          business_name: string
+          created_at: string
+          id: string
+          industry: string
+          owner_name: string
+          phone: string | null
+          target_age_max: number | null
+          target_age_min: number | null
+          target_audience: string[] | null
+          target_radius: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          business_goals?: string[] | null
+          business_name: string
+          created_at?: string
+          id?: string
+          industry: string
+          owner_name: string
+          phone?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_audience?: string[] | null
+          target_radius?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          business_goals?: string[] | null
+          business_name?: string
+          created_at?: string
+          id?: string
+          industry?: string
+          owner_name?: string
+          phone?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_audience?: string[] | null
+          target_radius?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          amount: number
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          status: string
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      targeting_settings: {
+        Row: {
+          age_max: number | null
+          age_min: number | null
+          campaign_id: string
+          created_at: string
+          genders: string[] | null
+          id: string
+          locations: string[] | null
+          radius: number | null
+          schedule: Json | null
+          updated_at: string
+        }
+        Insert: {
+          age_max?: number | null
+          age_min?: number | null
+          campaign_id: string
+          created_at?: string
+          genders?: string[] | null
+          id?: string
+          locations?: string[] | null
+          radius?: number | null
+          schedule?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          age_max?: number | null
+          age_min?: number | null
+          campaign_id?: string
+          created_at?: string
+          genders?: string[] | null
+          id?: string
+          locations?: string[] | null
+          radius?: number | null
+          schedule?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "targeting_settings_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

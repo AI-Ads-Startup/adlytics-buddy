@@ -3,15 +3,12 @@ import { Zap, Menu } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
-interface NavigationProps {
-  isAuthenticated?: boolean;
-  onSignOut?: () => void;
-}
-
-const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => {
+const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, signOut } = useAuth();
 
   const navItems = isAuthenticated ? [
     { label: "Dashboard", href: "/dashboard" },
@@ -56,7 +53,7 @@ const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => 
         <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Button variant="ghost" onClick={onSignOut}>
+              <Button variant="ghost" onClick={() => signOut()}>
                 Sign Out
               </Button>
               <Button variant="cta">
@@ -107,7 +104,7 @@ const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => 
               <div className="border-t pt-4 space-y-2">
                 {isAuthenticated ? (
                   <>
-                    <Button variant="ghost" className="w-full justify-start" onClick={onSignOut}>
+                    <Button variant="ghost" className="w-full justify-start" onClick={() => signOut()}>
                       Sign Out
                     </Button>
                     <Button variant="cta" className="w-full">
