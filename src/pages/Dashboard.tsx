@@ -1,13 +1,17 @@
+'use client'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Navigation from "@/components/Navigation";
-import { 
-  TrendingUp, 
-  Phone, 
-  Users, 
-  DollarSign, 
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import {
+  TrendingUp,
+  Phone,
+  Users,
+  DollarSign,
   Calendar,
   Plus,
   BarChart3,
@@ -16,10 +20,24 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
+  const { user, signOut, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  // Redirect if not authenticated
+  if (!isAuthenticated) {
+    router.push('/login');
+    return null;
+  }
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/');
+  };
+
   // Mock data - would come from API
-  const user = {
-    name: "John Smith",
-    businessName: "Smith's Restaurant",
+  const userData = {
+    name: user?.user_metadata?.owner_name || "User",
+    businessName: user?.user_metadata?.business_name || "Your Business",
     subscription: {
       status: "active",
       nextBilling: "2024-02-15"
@@ -46,7 +64,7 @@ const Dashboard = () => {
     {
       id: 2,
       name: "Takeout & Delivery",
-      status: "draft", 
+      status: "draft",
       keywords: 8,
       budget: 0,
       progress: 60
@@ -65,7 +83,7 @@ const Dashboard = () => {
       completed: false
     },
     {
-      title: "Launch campaigns", 
+      title: "Launch campaigns",
       description: "Go live with your Google Ads",
       completed: false
     }
@@ -73,16 +91,16 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
+      <Navigation isAuthenticated={true} onSignOut={handleSignOut} />
+
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
-            Welcome back, {user.name} 👋
+            Welcome back, {userData.name} 👋
           </h1>
           <p className="text-muted-foreground text-lg">
-            Here's what's happening with {user.businessName}
+            Here's what's happening with {userData.businessName}
           </p>
         </div>
 
@@ -202,11 +220,10 @@ const Dashboard = () => {
             <CardContent className="space-y-4">
               {nextSteps.map((step, index) => (
                 <div key={index} className="flex items-start space-x-3">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${
-                    step.completed 
-                      ? 'bg-success border-success text-white' 
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${step.completed
+                      ? 'bg-success border-success text-white'
                       : 'border-muted-foreground text-muted-foreground'
-                  }`}>
+                    }`}>
                     {index + 1}
                   </div>
                   <div className="flex-1">
@@ -235,7 +252,7 @@ const Dashboard = () => {
               <div>
                 <p className="font-medium">Platform Access - $150/month</p>
                 <p className="text-sm text-muted-foreground">
-                  Next billing: {user.subscription.nextBilling}
+                  Next billing: {userData.subscription.nextBilling}
                 </p>
               </div>
               <Badge variant="outline" className="bg-success/10 text-success border-success">

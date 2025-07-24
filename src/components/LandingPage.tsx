@@ -1,10 +1,15 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Target, Zap, TrendingUp, DollarSign, Clock, Shield, Smartphone } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
 const LandingPage = () => {
+  const router = useRouter();
   const features = [
     {
       icon: <Clock className="h-6 w-6" />,
@@ -49,8 +54,12 @@ const LandingPage = () => {
             <span className="text-xl font-bold">AdsCampaign</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">Login</Button>
-            <Button variant="cta">Get Started</Button>
+            <Link href="/login">
+              <Button variant="ghost">Login</Button>
+            </Link>
+            <Link href="/signup">
+              <Button variant="cta">Get Started</Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -68,13 +77,18 @@ const LandingPage = () => {
                   Professional <span className="bg-gradient-hero bg-clip-text text-transparent">Google Ads</span> Without the Complexity
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
-                  Create and manage high-converting Google Ads campaigns in just 15 minutes. 
+                  Create and manage high-converting Google Ads campaigns in just 15 minutes.
                   Start with our $150/month platform fee and configure your advertising budget when you're ready.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="hero" size="lg" className="text-lg px-8 py-6 h-auto">
+                <Button
+                  variant="hero"
+                  size="lg"
+                  className="text-lg px-8 py-6 h-auto"
+                  onClick={() => router.push('/signup')}
+                >
                   Start Building Campaigns
                 </Button>
                 <Button variant="outline" size="lg" className="text-lg px-8 py-6 h-auto">
@@ -100,10 +114,13 @@ const LandingPage = () => {
 
             <div className="relative">
               <div className="relative z-10">
-                <img 
-                  src={heroImage} 
-                  alt="Google Ads Campaign Builder Dashboard" 
+                <Image
+                  src="/hero-image.jpg"
+                  alt="Google Ads Campaign Builder Dashboard"
+                  width={600}
+                  height={400}
                   className="rounded-xl shadow-elegant hover:shadow-glow transition-all duration-500 transform hover:scale-105"
+                  priority
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-primary opacity-20 rounded-xl blur-3xl transform scale-110"></div>
@@ -182,7 +199,12 @@ const LandingPage = () => {
                     </div>
                   ))}
                 </div>
-                <Button variant="cta" size="lg" className="w-full text-lg py-6 h-auto">
+                <Button
+                  variant="cta"
+                  size="lg"
+                  className="w-full text-lg py-6 h-auto"
+                  onClick={() => router.push('/signup')}
+                >
                   Start Your Trial
                 </Button>
                 <p className="text-center text-sm text-muted-foreground">
@@ -203,11 +225,16 @@ const LandingPage = () => {
               Ready to Grow Your Business?
             </h2>
             <p className="text-xl opacity-90 leading-relaxed">
-              Join thousands of small businesses already using our platform to create successful Google Ads campaigns 
+              Join thousands of small businesses already using our platform to create successful Google Ads campaigns
               without the complexity and confusion.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="text-lg px-8 py-6 h-auto">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="text-lg px-8 py-6 h-auto"
+                onClick={() => router.push('/signup')}
+              >
                 Get Started Now
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6 h-auto border-white text-white hover:bg-white hover:text-primary">
@@ -233,7 +260,7 @@ const LandingPage = () => {
                 Making Google Ads accessible for small businesses everywhere.
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-semibold">Product</h4>
               <div className="space-y-2 text-muted-foreground">
@@ -243,7 +270,7 @@ const LandingPage = () => {
                 <div>Budget Management</div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-semibold">Support</h4>
               <div className="space-y-2 text-muted-foreground">
@@ -253,7 +280,7 @@ const LandingPage = () => {
                 <div>API Documentation</div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-semibold">Company</h4>
               <div className="space-y-2 text-muted-foreground">
@@ -264,7 +291,7 @@ const LandingPage = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="border-t mt-8 pt-8 text-center text-muted-foreground">
             <p>&copy; 2024 AdsCampaign. All rights reserved.</p>
           </div>

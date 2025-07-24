@@ -1,14 +1,20 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Zap, Menu } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
 
-const Navigation = () => {
+interface NavigationProps {
+  isAuthenticated?: boolean;
+  onSignOut?: () => void;
+}
+
+const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
-  const { isAuthenticated, signOut } = useAuth();
+  const pathname = usePathname();
 
   const navItems = isAuthenticated ? [
     { label: "Dashboard", href: "/dashboard" },
@@ -24,7 +30,7 @@ const Navigation = () => {
     <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+        <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
             <Zap className="h-5 w-5 text-white" />
           </div>
@@ -36,11 +42,11 @@ const Navigation = () => {
           {navItems.map((item) => (
             <Link
               key={item.href}
-              to={item.href}
+              href={item.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                location.pathname === item.href 
-                  ? "text-primary" 
+                pathname === item.href
+                  ? "text-primary"
                   : "text-muted-foreground"
               )}
             >
@@ -53,7 +59,7 @@ const Navigation = () => {
         <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              <Button variant="ghost" onClick={() => signOut()}>
+              <Button variant="ghost" onClick={onSignOut}>
                 Sign Out
               </Button>
               <Button variant="cta">
@@ -62,10 +68,10 @@ const Navigation = () => {
             </>
           ) : (
             <>
-              <Link to="/login">
+              <Link href="/login">
                 <Button variant="ghost">Login</Button>
               </Link>
-              <Link to="/signup">
+              <Link href="/signup">
                 <Button variant="cta">Get Started</Button>
               </Link>
             </>
@@ -89,11 +95,11 @@ const Navigation = () => {
               {navItems.map((item) => (
                 <Link
                   key={item.href}
-                  to={item.href}
+                  href={item.href}
                   className={cn(
                     "block py-2 text-sm font-medium transition-colors",
-                    location.pathname === item.href 
-                      ? "text-primary" 
+                    pathname === item.href
+                      ? "text-primary"
                       : "text-muted-foreground hover:text-primary"
                   )}
                   onClick={() => setIsMenuOpen(false)}
@@ -104,7 +110,7 @@ const Navigation = () => {
               <div className="border-t pt-4 space-y-2">
                 {isAuthenticated ? (
                   <>
-                    <Button variant="ghost" className="w-full justify-start" onClick={() => signOut()}>
+                    <Button variant="ghost" className="w-full justify-start" onClick={onSignOut}>
                       Sign Out
                     </Button>
                     <Button variant="cta" className="w-full">
@@ -113,10 +119,10 @@ const Navigation = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/login">
+                    <Link href="/login">
                       <Button variant="ghost" className="w-full">Login</Button>
                     </Link>
-                    <Link to="/signup">
+                    <Link href="/signup">
                       <Button variant="cta" className="w-full">Get Started</Button>
                     </Link>
                   </>

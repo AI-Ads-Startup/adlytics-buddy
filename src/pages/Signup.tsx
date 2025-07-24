@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Zap, Building2, Utensils, Scale, Hammer, Stethoscope, ShoppingBag, Car, GraduationCap, Users, Check } from 'lucide-react';
+import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 const initialBusinessInfo = {
@@ -66,11 +69,13 @@ const Signup = () => {
   const [businessProfile, setBusinessProfile] = useState(initialBusinessProfile);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { signUp, isAuthenticated } = useAuth();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    router.push('/dashboard');
+    return null;
   }
 
   const toggleBusinessGoal = (goal: string) => {
@@ -98,24 +103,41 @@ const Signup = () => {
         setError('Email and password are required');
         return;
       }
-      
-      setLoading(true);
-      setError('');
 
-      const { error } = await signUp(businessInfo.email, businessInfo.password, {
-        business_name: businessInfo.businessName,
-        owner_name: businessInfo.ownerName,
-        industry: businessInfo.industry,
-        phone: businessInfo.phone
-      });
-
-      if (error) {
-        setError(error.message);
-        setLoading(false);
+      if (!businessInfo.businessName || !businessInfo.ownerName) {
+        setError('Business name and owner name are required');
         return;
       }
 
-      setLoading(false);
+      setLoading(true);
+      setError('');
+
+      try {
+        // Sign up the user using the useAuth hook
+        const { error: authError } = await signUp(businessInfo.email, businessInfo.password, {
+          business_name: businessInfo.businessName,
+          owner_name: businessInfo.ownerName,
+          industry: businessInfo.industry,
+          phone: businessInfo.phone,
+          promo_code: businessInfo.promoCode
+        });
+
+        if (authError) {
+          setError(authError.message);
+          setLoading(false);
+          return;
+        }
+
+        // If signup successful, move to next step
+        setLoading(false);
+        setCurrentStep(currentStep + 1);
+
+      } catch (err) {
+        setError('An unexpected error occurred. Please try again.');
+        setLoading(false);
+      }
+
+      return;
     }
 
     if (currentStep < 4) {
@@ -133,17 +155,15 @@ const Signup = () => {
     <div className="flex items-center justify-center space-x-4 mb-8">
       {[1, 2, 3, 4].map((step) => (
         <div key={step} className="flex items-center">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-            step <= currentStep 
-              ? 'bg-primary text-white' 
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step <= currentStep
+              ? 'bg-primary text-white'
               : 'bg-muted text-muted-foreground'
-          }`}>
+            }`}>
             {step}
           </div>
           {step < 4 && (
-            <div className={`w-12 h-0.5 ${
-              step < currentStep ? 'bg-primary' : 'bg-muted'
-            }`} />
+            <div className={`w-12 h-0.5 ${step < currentStep ? 'bg-primary' : 'bg-muted'
+              }`} />
           )}
         </div>
       ))}
@@ -181,7 +201,7 @@ const Signup = () => {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="businessName">Business Name</Label>
@@ -189,7 +209,7 @@ const Signup = () => {
                     id="businessName"
                     placeholder="Your Business Name"
                     value={businessInfo.businessName}
-                    onChange={(e) => setBusinessInfo({...businessInfo, businessName: e.target.value})}
+                    onChange={(e) => setBusinessInfo({ ...businessInfo, businessName: e.target.value })}
                     required
                   />
                 </div>
@@ -199,12 +219,12 @@ const Signup = () => {
                     id="ownerName"
                     placeholder="Your Full Name"
                     value={businessInfo.ownerName}
-                    onChange={(e) => setBusinessInfo({...businessInfo, ownerName: e.target.value})}
+                    onChange={(e) => setBusinessInfo({ ...businessInfo, ownerName: e.target.value })}
                     required
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="email">Business Email</Label>
                 <Input
@@ -212,11 +232,11 @@ const Signup = () => {
                   type="email"
                   placeholder="business@example.com"
                   value={businessInfo.email}
-                  onChange={(e) => setBusinessInfo({...businessInfo, email: e.target.value})}
+                  onChange={(e) => setBusinessInfo({ ...businessInfo, email: e.target.value })}
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
@@ -224,14 +244,14 @@ const Signup = () => {
                   type="password"
                   placeholder="Create a secure password"
                   value={businessInfo.password}
-                  onChange={(e) => setBusinessInfo({...businessInfo, password: e.target.value})}
+                  onChange={(e) => setBusinessInfo({ ...businessInfo, password: e.target.value })}
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="industry">Industry</Label>
-                <Select onValueChange={(value) => setBusinessInfo({...businessInfo, industry: value})}>
+                <Select onValueChange={(value) => setBusinessInfo({ ...businessInfo, industry: value })}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select your industry" />
                   </SelectTrigger>
@@ -247,7 +267,7 @@ const Signup = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
@@ -256,7 +276,7 @@ const Signup = () => {
                     type="tel"
                     placeholder="(555) 123-4567"
                     value={businessInfo.phone}
-                    onChange={(e) => setBusinessInfo({...businessInfo, phone: e.target.value})}
+                    onChange={(e) => setBusinessInfo({ ...businessInfo, phone: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
@@ -265,7 +285,7 @@ const Signup = () => {
                     id="promoCode"
                     placeholder="Enter code"
                     value={businessInfo.promoCode}
-                    onChange={(e) => setBusinessInfo({...businessInfo, promoCode: e.target.value})}
+                    onChange={(e) => setBusinessInfo({ ...businessInfo, promoCode: e.target.value })}
                   />
                 </div>
               </div>
@@ -301,11 +321,11 @@ const Signup = () => {
                   <div className="text-4xl font-bold">$150<span className="text-xl text-muted-foreground">/month</span></div>
                   <p className="text-muted-foreground">Everything you need to create and manage campaigns</p>
                 </div>
-                
+
                 <div className="mt-6 space-y-3">
                   {[
                     "AI-powered campaign builder",
-                    "Keyword research & optimization", 
+                    "Keyword research & optimization",
                     "Performance tracking & reports",
                     "Mobile campaign management",
                     "Expert support when needed",
@@ -386,11 +406,11 @@ const Signup = () => {
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="address">Business Address</Label>
-                <Input 
+                <Input
                   id="address"
                   placeholder="123 Main St, City, State"
                   value={businessProfile.address}
-                  onChange={(e) => setBusinessProfile({...businessProfile, address: e.target.value})}
+                  onChange={(e) => setBusinessProfile({ ...businessProfile, address: e.target.value })}
                 />
               </div>
 
@@ -398,7 +418,7 @@ const Signup = () => {
                 <Label>Target Radius: {businessProfile.targetRadius} miles</Label>
                 <Slider
                   value={[businessProfile.targetRadius]}
-                  onValueChange={(value) => setBusinessProfile({...businessProfile, targetRadius: value[0]})}
+                  onValueChange={(value) => setBusinessProfile({ ...businessProfile, targetRadius: value[0] })}
                   max={50}
                   min={5}
                   step={5}
@@ -416,11 +436,10 @@ const Signup = () => {
                   {businessGoals.map((goal) => (
                     <div
                       key={goal}
-                      className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                        businessProfile.businessGoals.includes(goal)
+                      className={`p-3 border rounded-lg cursor-pointer transition-all ${businessProfile.businessGoals.includes(goal)
                           ? 'border-primary bg-primary/5 text-primary'
                           : 'border-border hover:border-primary/50'
-                      }`}
+                        }`}
                       onClick={() => toggleBusinessGoal(goal)}
                     >
                       <div className="flex items-center space-x-2">
@@ -436,7 +455,7 @@ const Signup = () => {
                 <Label>Target Age Range: {businessProfile.targetAge[0]} - {businessProfile.targetAge[1]} years</Label>
                 <Slider
                   value={businessProfile.targetAge}
-                  onValueChange={(value) => setBusinessProfile({...businessProfile, targetAge: value as [number, number]})}
+                  onValueChange={(value) => setBusinessProfile({ ...businessProfile, targetAge: value as [number, number] })}
                   max={70}
                   min={18}
                   step={1}
@@ -454,11 +473,10 @@ const Signup = () => {
                   {targetAudiences.map((audience) => (
                     <div
                       key={audience}
-                      className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                        businessProfile.targetAudience.includes(audience)
+                      className={`p-3 border rounded-lg cursor-pointer transition-all ${businessProfile.targetAudience.includes(audience)
                           ? 'border-primary bg-primary/5 text-primary'
                           : 'border-border hover:border-primary/50'
-                      }`}
+                        }`}
                       onClick={() => toggleTargetAudience(audience)}
                     >
                       <div className="flex items-center space-x-2">
