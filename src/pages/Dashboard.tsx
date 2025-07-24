@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import Navigation from "@/components/Navigation";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import {
@@ -20,10 +20,22 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, signOut, isAuthenticated } = useAuth();
+  const { user, signOut, isAuthenticated, loading } = useAuth();
   const router = useRouter();
 
-  // Redirect if not authenticated
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated (only after loading is complete)
   if (!isAuthenticated) {
     router.push('/login');
     return null;
@@ -91,8 +103,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation isAuthenticated={true} onSignOut={handleSignOut} />
-
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
@@ -221,8 +231,8 @@ const Dashboard = () => {
               {nextSteps.map((step, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${step.completed
-                      ? 'bg-success border-success text-white'
-                      : 'border-muted-foreground text-muted-foreground'
+                    ? 'bg-success border-success text-white'
+                    : 'border-muted-foreground text-muted-foreground'
                     }`}>
                     {index + 1}
                   </div>

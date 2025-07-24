@@ -13,7 +13,6 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Zap, Building2, Utensils, Scale, Hammer, Stethoscope, ShoppingBag, Car, GraduationCap, Users, Check } from 'lucide-react';
-import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 const initialBusinessInfo = {
@@ -156,8 +155,8 @@ const Signup = () => {
       {[1, 2, 3, 4].map((step) => (
         <div key={step} className="flex items-center">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step <= currentStep
-              ? 'bg-primary text-white'
-              : 'bg-muted text-muted-foreground'
+            ? 'bg-primary text-white'
+            : 'bg-muted text-muted-foreground'
             }`}>
             {step}
           </div>
@@ -437,8 +436,8 @@ const Signup = () => {
                     <div
                       key={goal}
                       className={`p-3 border rounded-lg cursor-pointer transition-all ${businessProfile.businessGoals.includes(goal)
-                          ? 'border-primary bg-primary/5 text-primary'
-                          : 'border-border hover:border-primary/50'
+                        ? 'border-primary bg-primary/5 text-primary'
+                        : 'border-border hover:border-primary/50'
                         }`}
                       onClick={() => toggleBusinessGoal(goal)}
                     >
@@ -474,8 +473,8 @@ const Signup = () => {
                     <div
                       key={audience}
                       className={`p-3 border rounded-lg cursor-pointer transition-all ${businessProfile.targetAudience.includes(audience)
-                          ? 'border-primary bg-primary/5 text-primary'
-                          : 'border-border hover:border-primary/50'
+                        ? 'border-primary bg-primary/5 text-primary'
+                        : 'border-border hover:border-primary/50'
                         }`}
                       onClick={() => toggleTargetAudience(audience)}
                     >

@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { Zap, Menu } from "lucide-react";
+import { Zap, Menu, User, LogOut, Home } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,10 +17,13 @@ const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => 
   const pathname = usePathname();
 
   const navItems = isAuthenticated ? [
+    { label: "Home", href: "/" },
     { label: "Dashboard", href: "/dashboard" },
     { label: "Campaigns", href: "/campaigns" },
     { label: "Reports", href: "/reports" },
+    { label: "Profile", href: "/profile" },
   ] : [
+    { label: "Home", href: "/" },
     { label: "Features", href: "#features" },
     { label: "Pricing", href: "#pricing" },
     { label: "Support", href: "#support" },
@@ -59,6 +62,9 @@ const Navigation = ({ isAuthenticated = false, onSignOut }: NavigationProps) => 
         <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <>
+              <Link href="/profile">
+                <User className="h-6 w-6 text-muted-foreground cursor-pointer" />
+              </Link>
               <Button variant="ghost" onClick={onSignOut}>
                 Sign Out
               </Button>

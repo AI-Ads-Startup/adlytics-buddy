@@ -1,0 +1,33 @@
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { User, Session, AuthError } from '@supabase/supabase-js';
+
+interface AuthContextType {
+    user: User | null;
+    session: Session | null;
+    loading: boolean;
+    signUp: (email: string, password: string, metadata?: any) => Promise<{ error: AuthError | null; }>;
+    signIn: (email: string, password: string) => Promise<{ error: AuthError | null; }>;
+    signOut: () => Promise<{ error: AuthError | null; }>;
+    isAuthenticated: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const auth = useAuth();
+
+    return (
+        <AuthContext.Provider value={auth}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuthContext = () => {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuthContext must be used within an AuthProvider');
+    }
+    return context;
+};
