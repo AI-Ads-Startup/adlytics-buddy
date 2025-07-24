@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,14 +14,11 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, isAuthenticated } = useAuth();
-  const router = useRouter();
 
   // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/dashboard');
-    }
-  }, [isAuthenticated, router]);
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +95,7 @@ const Login = () => {
               
               <p className="text-sm text-center text-muted-foreground">
                 Don't have an account?{' '}
-                <Link href="/signup" className="text-primary hover:underline">
+                <Link to="/signup" className="text-primary hover:underline">
                   Sign up here
                 </Link>
               </p>
