@@ -62,7 +62,27 @@ This project is built with:
 
 ## How can I deploy this project?
 
+### Quick Deploy (Recommended)
 Simply open [Lovable](https://lovable.dev/projects/a8db6f20-abeb-4586-9c7e-3ac33f476792) and click on Share -> Publish.
+
+### Manual Deployment
+
+For production deployment to Vercel, Netlify, or other platforms:
+
+```sh
+# Run pre-deployment checks
+npm run pre-deploy
+
+# Or run individual checks
+npm run lint          # Check for code issues
+npm run type-check     # Verify TypeScript types
+npm run build          # Build for production
+```
+
+#### Production Notes
+- This project uses React 19 with dependency overrides for compatibility
+- Node.js 18+ required (specified in package.json engines)
+- All dependencies are tested and working in production
 
 ## Can I connect a custom domain to my Lovable project?
 
